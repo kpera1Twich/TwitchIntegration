@@ -135,7 +135,7 @@ class StreamIntegrationsBot(Bot):
         print(f"{stdout.decode()=}; {len(stdout.decode())=}")
         print(f"{stderr.decode()=}; {len(stderr.decode())=}")
 
-        if not stderr.decode().startswith("Reset branch"):
+        if stderr.decode().startswith("Reset branch"):
             await self.__reload_cogs()
             return True
 
