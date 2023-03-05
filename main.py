@@ -18,7 +18,6 @@ from twitchio.ext.commands import Bot, Cog, Context, command
 from fun.import_cog import ImportCogs
 from helper_functions.enums import ScreenRotation
 from helper_functions.key_commands import hold_and_release_key
-from helper_functions.validation import check_for_user
 
 load_dotenv(".env", override=True)
 load_dotenv("DO NOT OPEN ON CAM/.env.account_details", override=True)
@@ -86,7 +85,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await check_for_user(ctx.author.name):
+        if not await self.__check_for_user(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         args = ctx.message.content.split("-flip_screen")
         if len(args) > 0:
@@ -115,7 +114,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await check_for_user(ctx.author.name):
+        if not await self.__check_for_user(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         print("Checking")
         await self.__check_for_updated_cogs()
@@ -128,21 +127,17 @@ class StreamIntegrationsBot(Bot):
         :rtype: bool
         """
         shell = await create_subprocess_shell(
-            "git diff --name-only",
+            "git fetch --all & git checkout origin/main -f",
             stdout=PIPE,
             stderr=PIPE,
         )
         stdout, stderr = await shell.communicate()
-        if len(stdout.decode()) > 6:
-            shell = await create_subprocess_shell(
-                "git merge origin/master",
-                stdout=PIPE,
-                stderr=PIPE,
-            )
-            stdout, stderr = await shell.communicate()
-            if len(stderr.decode()) == 0:
-                await self.__reload_cogs()
-                return True
+        print(f"{stdout.decode()=}; {len(stdout.decode())=}")
+        print(f"{stderr.decode()=}; {len(stderr.decode())=}")
+
+        if len(stderr.decode()) == 0:
+            await self.__reload_cogs()
+            return True
 
     async def __reload_cogs(self):
         """Unloads then reloads all the cogs
@@ -157,6 +152,22 @@ class StreamIntegrationsBot(Bot):
         reload_module = modules["fun"]
         reload(reload_module)
         self.add_cog(ImportCogs(self))
+        for cog in self.cogs:
+            print(cog)
+
+    async def __check_for_user(self, author: str, user: str = "kpera1") -> bool:
+        """Checks if the command was sent by a user
+
+        :param author: The username of the user who sent the message
+        :type author: str
+        :param user: The username of the user
+        :type user: str
+        :return: Whether the message was sent by that user
+        :rtype: bool
+        """
+        if author == user:
+            return True
+        return False
 
 
 bot = StreamIntegrationsBot()
