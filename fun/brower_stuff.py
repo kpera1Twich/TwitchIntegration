@@ -1,5 +1,6 @@
 """Adds commands to do with the browser"""
 
+from helper_functions.validation import check_for_user
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -22,6 +23,9 @@ class WebBrowserCommands(Cog):
         :return:
         :rtype:
         """
+        if not await check_for_user(ctx.author.name):
+            await ctx.reply("You cannot do this command!")
+
         firefox_options = webdriver.FirefoxOptions()
         firefox_options.add_argument("--disable-notifications")
         firefox_options.add_argument("--headless")

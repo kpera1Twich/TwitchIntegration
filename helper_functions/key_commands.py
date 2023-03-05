@@ -35,7 +35,7 @@ async def hold_key(hex_key_value: Keys | MouseButtons):
 async def release_key(hex_key_value: Keys | MouseButtons):
     """Releases a key
 
-    :param hex_key_value: The hex code of the key to relase
+    :param hex_key_value: The hex code of the key to release
     :type hex_key_value: Keys | MouseButtons
     :return:
     :rtype:
@@ -56,13 +56,25 @@ async def release_key(hex_key_value: Keys | MouseButtons):
 async def hold_and_release_key(hex_key_value: Keys | MouseButtons, seconds: float):
     """Holds down a key for a certain amount of time
 
-    :param hex_key_value:
-    :type hex_key_value:
-    :param seconds:
-    :type seconds:
+    :param hex_key_value: The hex code of the key
+    :type hex_key_value: Keys | MouseButtons
+    :param seconds: How many seconds to hold the key for
+    :type seconds: float
     :return:
     :rtype:
     """
     await hold_key(hex_key_value)
     await sleep(seconds)
+    await release_key(hex_key_value)
+
+
+async def press_key(hex_key_value: Keys | MouseButtons):
+    """Presses a key
+
+    :param hex_key_value: The hex code of the key
+    :type hex_key_value: Keys | MouseButtons
+    :return:
+    :rtype:
+    """
+    await hold_key(hex_key_value)
     await release_key(hex_key_value)
