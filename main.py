@@ -127,7 +127,7 @@ class StreamIntegrationsBot(Bot):
         :rtype: bool
         """
         shell = await create_subprocess_shell(
-            "git fetch --all & git checkout origin/main -f",
+            """git fetch --all & git checkout -B "main" "origin/main" -f""",
             stdout=PIPE,
             stderr=PIPE,
         )
@@ -135,7 +135,7 @@ class StreamIntegrationsBot(Bot):
         print(f"{stdout.decode()=}; {len(stdout.decode())=}")
         print(f"{stderr.decode()=}; {len(stderr.decode())=}")
 
-        if len(stderr.decode()) == 0:
+        if not stderr.decode().startswith("Reset branch"):
             await self.__reload_cogs()
             return True
 
@@ -153,7 +153,7 @@ class StreamIntegrationsBot(Bot):
         reload(reload_module)
         self.add_cog(ImportCogs(self))
         for cog in self.cogs:
-            print(cog)
+            print(cog.title())
 
     async def __check_for_user(self, author: str, user: str = "kpera1") -> bool:
         """Checks if the command was sent by a user
