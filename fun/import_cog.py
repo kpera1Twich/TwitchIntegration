@@ -12,4 +12,5 @@ class ImportCogs(Cog):
             WebBrowserCommands(bot),
             MinecraftCommands(bot),
         ]:
+            print(f"Adding cog {cog}")
             bot.add_cog(cog)
