@@ -2,6 +2,7 @@ from twitchio.ext.commands import Bot, Cog, Context, command
 
 from .brower_stuff import WebBrowserCommands
 from .minecraft import MinecraftCommands
+from .wallpaper import WallpaperCommands
 
 
 class ImportCogs(Cog):
@@ -11,5 +12,6 @@ class ImportCogs(Cog):
         for cog in [
             WebBrowserCommands(bot),
             MinecraftCommands(bot),
+            WallpaperCommands(bot),
         ]:
             bot.add_cog(cog)

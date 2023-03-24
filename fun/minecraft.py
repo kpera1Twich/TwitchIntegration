@@ -2,7 +2,7 @@
 
 from helper_functions.enums import Keys
 from helper_functions.key_commands import hold_key, press_key, release_key
-from helper_functions.validation import check_for_user
+from helper_functions.validation import check_for_users
 from twitchio.ext.commands import Bot, Cog, Context, command
 
 
@@ -22,7 +22,7 @@ class MinecraftCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_user(ctx.author.name):
+        if not await check_for_users(ctx.author.name):
             await ctx.reply("You cannot do this command!")
 
         await press_key(Keys.Q)  # Default key is Q
@@ -36,9 +36,16 @@ class MinecraftCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_user(ctx.author.name):
+        if not await check_for_users(ctx.author.name):
             await ctx.reply("You cannot do this command!")
 
         await hold_key(Keys.LEFT_CONTROL)
         await press_key(Keys.Q)  # Default key is Q
         await release_key(Keys.LEFT_CONTROL)
+
+    async def reset(self):
+        """Resets everything done by this cog
+
+        :return:
+        :rtype:
+        """

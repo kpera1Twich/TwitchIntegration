@@ -6,7 +6,7 @@ e.g. If I type the word "rick-roll", the bot plays "Never gonna give you up" on 
 The bot should be able to connect to GITHUB so that it can check to see if any commands have changed, and if so,
 download them and re-import the commands
 """
-from asyncio import create_subprocess_shell, sleep
+from asyncio import create_subprocess_shell, get_running_loop, sleep
 from asyncio.subprocess import PIPE
 from importlib import reload
 from os import getcwd, getenv
@@ -18,6 +18,7 @@ from twitchio.ext.commands import Bot, Cog, Context, command
 from fun.import_cog import ImportCogs
 from helper_functions.enums import ScreenRotation
 from helper_functions.key_commands import hold_and_release_key
+from helper_functions.validation import check_for_users
 
 load_dotenv(".env", override=True)
 load_dotenv("DO NOT OPEN ON CAM/.env.account_details", override=True)
@@ -85,7 +86,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await self.__check_for_user(ctx.author.name):
+        if not await check_for_users(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         args = ctx.message.content.split("-flip_screen")
         if len(args) > 0:
@@ -114,7 +115,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await self.__check_for_user(ctx.author.name):
+        if not await check_for_users(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         print("Checking")
         await self.__check_for_updated_cogs()
@@ -147,6 +148,7 @@ class StreamIntegrationsBot(Bot):
         """
         cogs = {k: v for k, v in self.cogs.items()}
         for cog in cogs:
+            await cog.reset()
             self.remove_cog(cog)
 
         reload_module = modules["fun"]
@@ -155,21 +157,14 @@ class StreamIntegrationsBot(Bot):
         for cog in self.cogs:
             print(cog.title())
 
-    async def __check_for_user(self, author: str, user: str = "kpera1") -> bool:
-        """Checks if the command was sent by a user
-
-        :param author: The username of the user who sent the message
-        :type author: str
-        :param user: The username of the user
-        :type user: str
-        :return: Whether the message was sent by that user
-        :rtype: bool
-        """
-        if author == user:
-            return True
-        return False
-
 
 bot = StreamIntegrationsBot()
 
-bot.run()
+try:
+    bot.run()
+except Exception as e:
+    print(e)
+    cogs = {k: v for k, v in bot.cogs.items()}
+    loop = get_running_loop()
+    for cog in cogs:
+        loop.run_until_complete(cog.reset())
