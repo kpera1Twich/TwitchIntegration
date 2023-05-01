@@ -6,18 +6,18 @@ authors = ["KieranPiper <Navtech.KPInc@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-twitchio = "^2.5.0"
-python-dotenv = "^1.0.0"
-selenium = "^4.8.2"
-selenium-async = "^0.1.0"
-pynput = "^1.7.6"
+python = ">=3.10,<4.0"
+twitchio = "=2.5.0"
+python-dotenv = "=1.0.0"
+selenium = "=4.8.2"
+selenium-async = "=0.1.0"
+pynput = "=1.7.6"
 
 
 [tool.poetry.group.dev.dependencies]
-isort = "^5.12.0"
-black = "^23.1.0"
-autoflake = "^2.0.1"
+isort = "=5.12.0"
+black = "=23.1.0"
+autoflake = "=2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
