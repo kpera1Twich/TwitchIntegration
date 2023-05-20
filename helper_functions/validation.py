@@ -12,3 +12,7 @@ async def check_for_users(author: str) -> bool:
     if author in ["kpera1", "xthatxchickx", "e1ndude"]:
         return True
     return False
+
+
+async def check_for_rights(author: str, allowed_rights: list[str]) -> bool:
+    ...
