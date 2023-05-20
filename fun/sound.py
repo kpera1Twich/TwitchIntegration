@@ -20,6 +20,7 @@ class AdjustAudioCommands(Cog):
         self.__original_sound_level: c_float = c_float(0)
 
         self.__get_audio_sources()
+        self.__get_default_settings()
 
     async def mute_mic(self):
         """Mutes the mic
