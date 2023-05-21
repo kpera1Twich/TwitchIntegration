@@ -3,8 +3,8 @@ from ctypes import Array, c_wchar, create_unicode_buffer, windll
 from pathlib import Path
 from random import choice
 
-from helper_functions.validation import check_for_users
-from twitchio.ext.commands import Bot, Cog, Context, command
+from helper_functions.validation import check_for_trusted_members
+from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
 class WallpaperCommands(Cog):
@@ -19,6 +19,7 @@ class WallpaperCommands(Cog):
             0x73, len(self.__original_wallpaper), self.__original_wallpaper, 0
         )
 
+    @cooldown(rate=1, per=1800, bucket=Bucket.channel)
     @command()
     async def set_random_wallpaper(self, context: Context):
         """Sets the windows background to a random image inside the resources/images file
@@ -28,7 +29,7 @@ class WallpaperCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_users(context.author.name):
+        if not await check_for_trusted_members(context.author.name):
             return
         directory = Path(".")
         while directory.is_dir():

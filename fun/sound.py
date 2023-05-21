@@ -1,10 +1,11 @@
 """Commands for sounds"""
-
+from asyncio import sleep
 from ctypes import POINTER, c_float, cast, windll
 from subprocess import PIPE, CompletedProcess, run
 
-from helper_functions.validation import check_for_users
-from twitchio.ext.commands import Bot, Cog, Context, command
+from _cffi_backend import buffer
+from helper_functions.validation import check_for_trusted_members
+from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
 class AdjustAudioCommands(Cog):
@@ -22,13 +23,40 @@ class AdjustAudioCommands(Cog):
         self.__get_audio_sources()
         self.__get_default_settings()
 
-    async def mute_mic(self):
+    @cooldown(rate=0, per=600, bucket=Bucket.member)
+    @cooldown(rate=1, per=600, bucket=Bucket.mod)
+    @command()
+    async def mute_mic(self, ctx: Context):
         """Mutes the mic
 
         :return:
         :rtype:
         """
-        self.__run_powershell_command("RecordingMute True")
+        if not await check_for_trusted_members(ctx.author.name):
+            return
+        self.__run_powershell_command("Set-AudioDevice -RecordingMute 1")
+        if len(ctx.message.content.split()) > 1:
+            try:
+                time = float(ctx.message.content.split()[1])
+                await sleep(time)
+                await self.unmute_mic(ctx)
+            except ValueError:
+                ...
+
+    @cooldown(rate=0, per=600, bucket=Bucket.member)
+    @cooldown(rate=1, per=600, bucket=Bucket.mod)
+    @command()
+    async def unmute_mic(self, ctx: Context):
+        """Allows the mic to output sound again
+
+        :param ctx:
+        :type ctx:
+        :return:
+        :rtype:
+        """
+        if not await check_for_trusted_members(ctx.author.name):
+            return
+        self.__run_powershell_command("Set-AudioDevice -RecordingMute 0")
 
     async def reset(self):
         """Resets all the audio
@@ -70,11 +98,11 @@ class AdjustAudioCommands(Cog):
             index, default, _, device_type, _, device_id, device = item.split("\r\n")
             self.__audio_sources.append(
                 {
-                    "Index": index.split(":").strip(),
-                    "Default": default.split(":").strip(),
-                    "Type": device_type.split(":").strip(),
-                    "ID": device_id.split(":").strip(),
-                    "Device": device.split(":").strip(),
+                    "Index": index.split(":")[1].strip(),
+                    "Default": default.split(":")[1].strip(),
+                    "Type": device_type.split(":")[1].strip(),
+                    "ID": device_id.split(":")[1].strip(),
+                    "Device": device.split(":")[1].strip(),
                 }
             )
 
@@ -92,11 +120,11 @@ class AdjustAudioCommands(Cog):
         )
 
         self.__default_mic_settings = {
-            "muted": mic_muted.stdout.decode("utf-8"),
+            "muted": 0 if mic_muted.stdout.decode("utf-8") == "False" else 1,
             "volume": mic_volume.stdout.decode("utf-8").split("%")[0],
         }
         self.__default_speaker_settings = {
-            "muted": speaker_muted.stdout.decode("utf-8"),
+            "muted": 0 if speaker_muted.stdout.decode("utf-8") else 1,
             "volume": speaker_volume.stdout.decode("utf-8").split("%")[0],
         }
 

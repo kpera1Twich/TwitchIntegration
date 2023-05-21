@@ -1,13 +1,13 @@
 """Adds commands to do with the browser"""
 from asyncio import sleep
 
-from helper_functions.validation import check_for_users
+from helper_functions.validation import check_for_trusted_members
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.webdriver import WebDriver
-from twitchio.ext.commands import Bot, Cog, Context, command
+from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
 class WebBrowserCommands(Cog):
@@ -18,6 +18,8 @@ class WebBrowserCommands(Cog):
         self.__bot = bot
         self.__windows: list[WebDriver] = []
 
+    @cooldown(rate=0, per=600, bucket=Bucket.member)
+    @cooldown(rate=1, per=600, bucket=Bucket.subscriber)
     @command()
     async def rick_roll(self, ctx: Context):
         """Opens up "Never gonna give you up" in the background
@@ -27,7 +29,7 @@ class WebBrowserCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_users(ctx.author.name):
+        if not await check_for_trusted_members(ctx.author.name):
             await ctx.reply("You cannot do this command!")
 
         firefox_options = webdriver.FirefoxOptions()

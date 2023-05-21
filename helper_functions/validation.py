@@ -1,7 +1,7 @@
 """Validation methods"""
 
 
-async def check_for_users(author: str) -> bool:
+async def check_for_trusted_members(author: str) -> bool:
     """Checks if the command was sent by a user
 
     :param author: The username of the user who sent the message

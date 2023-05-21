@@ -19,7 +19,7 @@ from twitchio.ext.commands import Bot, Cog, Context, command
 from fun.import_cog import ImportCogs
 from helper_functions.enums import ScreenRotation
 from helper_functions.key_commands import hold_and_release_key
-from helper_functions.validation import check_for_users
+from helper_functions.validation import check_for_trusted_members
 
 load_dotenv(".env", override=True)
 load_dotenv("DO NOT OPEN ON CAM/.env.account_details", override=True)
@@ -87,7 +87,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await check_for_users(ctx.author.name):
+        if not await check_for_trusted_members(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         args = ctx.message.content.split("-flip_screen")
         if len(args) > 0:
@@ -116,7 +116,7 @@ class StreamIntegrationsBot(Bot):
         :return:
         :rtype:
         """
-        if not await check_for_users(ctx.author.name):
+        if not await check_for_trusted_members(ctx.author.name):
             await ctx.reply("You cannot do this command!")
         print("Checking")
         await self.__check_for_updated_cogs()
