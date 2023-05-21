@@ -3,7 +3,6 @@ from asyncio import sleep
 from ctypes import POINTER, c_float, cast, windll
 from subprocess import PIPE, CompletedProcess, run
 
-from _cffi_backend import buffer
 from helper_functions.validation import check_for_trusted_members
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
@@ -57,6 +56,41 @@ class AdjustAudioCommands(Cog):
         if not await check_for_trusted_members(ctx.author.name):
             return
         self.__run_powershell_command("Set-AudioDevice -RecordingMute 0")
+
+    @cooldown(rate=0, per=600, bucket=Bucket.member)
+    @cooldown(rate=1, per=600, bucket=Bucket.mod)
+    @command()
+    async def mute_speakers(self, ctx: Context):
+        """Mutes the mic
+
+        :return:
+        :rtype:
+        """
+        if not await check_for_trusted_members(ctx.author.name):
+            return
+        self.__run_powershell_command("Set-AudioDevice -PlaybackMute 1")
+        if len(ctx.message.content.split()) > 1:
+            try:
+                time = float(ctx.message.content.split(" ")[1])
+                await sleep(time)
+                await self.unmute_speakers(ctx)
+            except ValueError:
+                ...
+
+    @cooldown(rate=0, per=600, bucket=Bucket.member)
+    @cooldown(rate=1, per=600, bucket=Bucket.mod)
+    @command()
+    async def unmute_speakers(self, ctx: Context):
+        """Allows the mic to output sound again
+
+        :param ctx:
+        :type ctx:
+        :return:
+        :rtype:
+        """
+        if not await check_for_trusted_members(ctx.author.name):
+            return
+        self.__run_powershell_command("Set-AudioDevice -PlaybackMute 0")
 
     async def reset(self):
         """Resets all the audio

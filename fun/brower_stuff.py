@@ -29,8 +29,6 @@ class WebBrowserCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(ctx.author.name):
-            await ctx.reply("You cannot do this command!")
 
         firefox_options = webdriver.FirefoxOptions()
         firefox_options.add_argument("--disable-notifications")

@@ -29,8 +29,6 @@ class WallpaperCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(context.author.name):
-            return
         directory = Path(".")
         while directory.is_dir():
             directory = choice([item for item in directory.iterdir()])

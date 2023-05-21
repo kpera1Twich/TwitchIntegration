@@ -24,8 +24,6 @@ class MinecraftCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(ctx.author.name):
-            await ctx.reply("You cannot do this command!")
 
         await press_key(Keys.Q)  # Default key is Q
 
@@ -40,8 +38,6 @@ class MinecraftCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(ctx.author.name):
-            await ctx.reply("You cannot do this command!")
 
         await hold_key(Keys.LEFT_CONTROL)
         await press_key(Keys.Q)  # Default key is Q

