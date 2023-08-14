@@ -14,6 +14,7 @@ from os import getcwd, getenv
 from sys import modules
 
 from dotenv import load_dotenv
+from twitchio import Message
 from twitchio.ext.commands import Bot, Cog, Context, command
 
 from fun.import_cog import ImportCogs
@@ -32,6 +33,8 @@ class StreamIntegrationsBot(Bot):
             prefix="-",
             initial_channels=["kpera1", "e1ndude"],
         )
+
+        self.__hello_peeps = []
 
     async def event_ready(self):
         """Does some bits when the bot has connected to twitch
@@ -53,6 +56,40 @@ class StreamIntegrationsBot(Bot):
         """
         for cog in cogs:
             self.add_cog(cog)
+
+    # noinspection PyUnresolvedReferences
+    async def event_message(self, message: Message):
+        """Handles messages in case there is an event that needs to be done
+
+        :param message: The message that was sent
+        :type message: Message
+        :return:
+        :rtype:
+        """
+        if message.echo:
+            return  # Don't handle messages sent by the bot
+
+        if any(
+            [
+                message.content.lower() == "hello",
+                message.content.lower() == "hi",
+                message.content.lower() == "hey",
+                message.content.lower() == "07",
+            ]
+        ) and ("JumpScareCommands" in self.cogs.keys()):
+            jump_scare_commands = self.cogs.get("JumpScareCommands")
+            if (
+                message.author in self.__hello_peeps
+                and not jump_scare_commands.enable_spamming
+            ):
+                return
+            elif message.author not in self.__hello_peeps:
+                self.__hello_peeps.append(message.author)
+
+            await self.cogs.get("JumpScareCommands").hello_scare()
+
+        else:
+            await self.handle_commands(message)
 
     @command()
     async def ping(self, ctx: Context):
