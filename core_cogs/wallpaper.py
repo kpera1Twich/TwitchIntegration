@@ -1,12 +1,14 @@
 """Commands to do with the windows wallpaper"""
+
 from ctypes import Array, c_wchar, create_unicode_buffer, windll
 from pathlib import Path
 from random import choice
 
-from helper_functions.validation import check_for_trusted_members
+from helper_functions.config_handler import enable_function_with_config
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
+@enable_function_with_config(config="settings.wallpaper.enabled")
 class WallpaperCommands(Cog):
     """A cog for the web browsing commands"""
 
@@ -19,6 +21,7 @@ class WallpaperCommands(Cog):
             0x73, len(self.__original_wallpaper), self.__original_wallpaper, 0
         )
 
+    @enable_function_with_config(config="settings.wallpaper.change wallpaper")
     @cooldown(rate=1, per=1800, bucket=Bucket.channel)
     @command()
     async def set_random_wallpaper(self, context: Context):
@@ -29,7 +32,7 @@ class WallpaperCommands(Cog):
         :return:
         :rtype:
         """
-        directory = Path(".")
+        directory = Path("../cogs_handler")
         while directory.is_dir():
             directory = choice([item for item in directory.iterdir()])
 

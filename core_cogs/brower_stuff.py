@@ -1,7 +1,10 @@
 """Adds commands to do with the browser"""
 from asyncio import sleep
 
-from helper_functions.validation import check_for_trusted_members
+from helper_functions.config_handler import (
+    enable_function_if_any_config,
+    enable_function_with_config,
+)
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -10,6 +13,9 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
+@enable_function_if_any_config(
+    config=["secrets.mods-can-rr", "settings.browser.enabled"]
+)
 class WebBrowserCommands(Cog):
     """A cog for the web browsing commands"""
 
@@ -18,6 +24,7 @@ class WebBrowserCommands(Cog):
         self.__bot = bot
         self.__windows: list[WebDriver] = []
 
+    @enable_function_with_config(config="secrets.mods-can-rr")
     @cooldown(rate=0, per=600, bucket=Bucket.member)
     @cooldown(rate=1, per=600, bucket=Bucket.subscriber)
     @command()
