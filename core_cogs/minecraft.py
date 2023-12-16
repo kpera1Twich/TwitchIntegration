@@ -1,11 +1,11 @@
 """Commands for if the person is playing minecraft"""
-
+from helper_functions.config_handler import enable_function_with_config
 from helper_functions.enums import Keys
 from helper_functions.key_commands import hold_key, press_key, release_key
-from helper_functions.validation import check_for_trusted_members
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
+@enable_function_with_config(config="settings.minecraft.enabled")
 class MinecraftCommands(Cog):
     """A cog for the web browsing commands"""
 
@@ -13,6 +13,7 @@ class MinecraftCommands(Cog):
         super().__init__()
         self.__bot = bot
 
+    @enable_function_with_config(config="settings.minecraft.throw item")
     @cooldown(rate=1, per=600, bucket=Bucket.member)
     @cooldown(rate=5, per=300, bucket=Bucket.subscriber)
     @command()
@@ -27,6 +28,7 @@ class MinecraftCommands(Cog):
 
         await press_key(Keys.Q)  # Default key is Q
 
+    @enable_function_with_config(config="settings.minecraft.throw stack")
     @cooldown(rate=1, per=600, bucket=Bucket.member)
     @cooldown(rate=5, per=300, bucket=Bucket.subscriber)
     @command()

@@ -1,8 +1,5 @@
 #! ./venv/Scripts/python
-"""A program which when run by particular users, it will allow me to say something in chat and then a command gets
-executed on the persons computer:
-
-e.g. If I type the word "rick-roll", the bot plays "Never gonna give you up" on the persons computer.
+"""A program which can respond to messages sent in twitch chat.
 
 The bot should be able to connect to GITHUB so that it can check to see if any commands have changed, and if so,
 download them and re-import the commands
@@ -17,7 +14,8 @@ from dotenv import load_dotenv
 from twitchio import Message
 from twitchio.ext.commands import Bot, Cog, Context, command
 
-from fun.import_cog import ImportCogs
+from cogs_handler.import_cog import ImportCogs
+from helper_functions.config_handler import enable_function_with_config
 from helper_functions.enums import ScreenRotation
 from helper_functions.key_commands import hold_and_release_key
 from helper_functions.validation import check_for_trusted_members
@@ -115,6 +113,7 @@ class StreamIntegrationsBot(Bot):
         if ctx.author.name == "kpera1":
             await ctx.send("test")
 
+    @enable_function_with_config(config="settings.ungrouped.flip screen")
     @command()
     async def flip_screen(self, ctx: Context):
         """Flips the orientation of the screen

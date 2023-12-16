@@ -1,10 +1,9 @@
-from twitchio.ext.commands import Bot, Cog, Context, command
-
-from .brower_stuff import WebBrowserCommands
-from .jumpscares import JumpScareCommands
-from .minecraft import MinecraftCommands
-from .sound import AdjustAudioCommands
-from .wallpaper import WallpaperCommands
+from core_cogs.brower_stuff import WebBrowserCommands
+from core_cogs.jumpscares import JumpScareCommands
+from core_cogs.minecraft import MinecraftCommands
+from core_cogs.sound import AdjustAudioCommands
+from core_cogs.wallpaper import WallpaperCommands
+from twitchio.ext.commands import Bot, Cog
 
 
 class ImportCogs(Cog):

@@ -4,14 +4,13 @@ import random
 from pathlib import Path
 from threading import Thread
 
+from helper_functions.config_handler import enable_function_with_config
 from helper_functions.validation import check_for_trusted_members
 from playsound import PlaysoundException, playsound
-from twitchio import Message
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
-# from vlc import MediaPlayer
 
-
+@enable_function_with_config(config="settings.sound.enabled")
 class JumpScareCommands(Cog):
     """Cog for jumpscares"""
 
@@ -68,6 +67,7 @@ class JumpScareCommands(Cog):
         self.__enable_spamming = False
         await context.reply("Scare Command Spamming Disabled")
 
+    @enable_function_with_config(config="settings.sound.hello")
     async def hello_scare(self):
         """Plays a random "Hello" sound
 

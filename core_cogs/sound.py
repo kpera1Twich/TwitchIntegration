@@ -3,10 +3,12 @@ from asyncio import sleep
 from ctypes import POINTER, c_float, cast, windll
 from subprocess import PIPE, CompletedProcess, run
 
+from helper_functions.config_handler import enable_function_with_config
 from helper_functions.validation import check_for_trusted_members
 from twitchio.ext.commands import Bot, Bucket, Cog, Context, command, cooldown
 
 
+@enable_function_with_config(config="settings.sound.enabled")
 class AdjustAudioCommands(Cog):
     """A cog for adjusting audio"""
 
@@ -22,6 +24,7 @@ class AdjustAudioCommands(Cog):
         self.__get_audio_sources()
         self.__get_default_settings()
 
+    @enable_function_with_config(config="settings.sound.mute mic")
     @cooldown(rate=0, per=600, bucket=Bucket.member)
     @cooldown(rate=1, per=600, bucket=Bucket.mod)
     @command()
@@ -42,6 +45,7 @@ class AdjustAudioCommands(Cog):
             except ValueError:
                 ...
 
+    @enable_function_with_config(config="settings.sound.mute mic")
     @cooldown(rate=0, per=600, bucket=Bucket.member)
     @cooldown(rate=1, per=600, bucket=Bucket.mod)
     @command()
@@ -57,6 +61,7 @@ class AdjustAudioCommands(Cog):
             return
         self.__run_powershell_command("Set-AudioDevice -RecordingMute 0")
 
+    @enable_function_with_config(config="settings.sound.mute speakers")
     @cooldown(rate=0, per=600, bucket=Bucket.member)
     @cooldown(rate=1, per=600, bucket=Bucket.mod)
     @command()
@@ -66,8 +71,6 @@ class AdjustAudioCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(ctx.author.name):
-            return
         self.__run_powershell_command("Set-AudioDevice -PlaybackMute 1")
         if len(ctx.message.content.split()) > 1:
             try:
@@ -77,8 +80,9 @@ class AdjustAudioCommands(Cog):
             except ValueError:
                 ...
 
-    @cooldown(rate=0, per=600, bucket=Bucket.member)
-    @cooldown(rate=1, per=600, bucket=Bucket.mod)
+    @enable_function_with_config(config="settings.sound.mute speakers")
+    # @cooldown(rate=0, per=600, bucket=Bucket.member)
+    # @cooldown(rate=1, per=600, bucket=Bucket.mod)
     @command()
     async def unmute_speakers(self, ctx: Context):
         """Allows the mic to output sound again
@@ -88,8 +92,6 @@ class AdjustAudioCommands(Cog):
         :return:
         :rtype:
         """
-        if not await check_for_trusted_members(ctx.author.name):
-            return
         self.__run_powershell_command("Set-AudioDevice -PlaybackMute 0")
 
     async def reset(self):

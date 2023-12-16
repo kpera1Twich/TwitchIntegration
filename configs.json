@@ -1,0 +1,29 @@
+{
+    "secrets": {
+        "mods-can-rr": true
+    },
+    "settings": {
+        "sound": {
+            "enabled": true,
+            "hello": true,
+            "ear rape": true,
+            "mute mic": true,
+            "mute speakers": false
+        },
+        "minecraft": {
+            "enabled": true,
+            "throw item": true,
+            "throw stack": true
+        },
+        "browser": {
+            "enabled": true
+        },
+        "wallpaper": {
+            "enabled": true,
+            "change wallpaper": true
+        },
+        "ungrouped": {
+            "flip screen": true
+        }
+    }
+}
