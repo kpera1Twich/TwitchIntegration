@@ -12,3 +12,4 @@
 7z.exe a -t7z program.7z resources
 7z.exe a -t7z program.7z .gitignore
 7z.exe a -t7z program.7z geckodriver.exe
+7z.exe a -t7z program.7z readme.md

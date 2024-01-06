@@ -29,7 +29,7 @@ class StreamIntegrationsBot(Bot):
         super().__init__(
             token=getenv("ACCESS_TOKEN"),
             prefix="-",
-            initial_channels=["kpera1", "e1ndude"],
+            initial_channels=getenv("CHANNELS").split(","),
         )
 
         self.__hello_peeps = []
