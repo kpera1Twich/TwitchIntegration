@@ -154,6 +154,7 @@ class StreamIntegrationsBot(Bot):
         """
         if not await check_for_trusted_members(ctx.author.name):
             await ctx.reply("You cannot do this command!")
+            return
         print("Checking")
         await self.__check_for_updated_cogs()
         await ctx.reply("Reloaded cogs!")
