@@ -125,6 +125,7 @@ class StreamIntegrationsBot(Bot):
         """
         if not await check_for_trusted_members(ctx.author.name):
             await ctx.reply("You cannot do this command!")
+            return
         args = ctx.message.content.split("-flip_screen")
         if len(args) > 0:
             match args[1].strip():
