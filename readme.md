@@ -17,7 +17,8 @@ comma (","), but do not put any spaces in!
 You'll also need to tell it what channels it is allowed to do commands from. 
 
 # Configuration
-Configuration can be done in the [configs.json](./configs.json) file. This allows for enabling and disabling different
+Configuration can be done in the [configs-user.json](./configs-user.json) file. This allows for enabling and disabling 
+different
 components of the app.
 
 There may be more configurations added in future versions.

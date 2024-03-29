@@ -38,6 +38,10 @@ if %errorlevel% neq 0 (
 )
 
 
+::Final setup
+copy /y configs.json configs-user.json
+
+
 :Exit
     echo exitReason
     echo "Press enter to exit"

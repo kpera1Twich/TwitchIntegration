@@ -4,7 +4,7 @@ from typing import Callable
 
 from twitchio.ext.commands import Context
 
-with open("configs.json") as config_file:
+with open("configs-user.json") as config_file:
     CONFIGS: dict = load(config_file)
 
 

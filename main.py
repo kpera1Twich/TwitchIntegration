@@ -7,6 +7,7 @@ download them and re-import the commands
 from asyncio import create_subprocess_shell, get_running_loop, sleep
 from asyncio.subprocess import PIPE
 from importlib import reload
+from json import dump, load
 from os import getcwd, getenv
 from sys import modules
 
@@ -189,6 +190,20 @@ class StreamIntegrationsBot(Bot):
         for cog in cogs:
             await cog.reset()
             self.remove_cog(cog)
+
+        # Make sure the configs are properly set.
+        # There might be configs which are new, so we need to update the users' config file with these new configs,
+        # while keeping the old ones
+        with open("configs-user.json", "r") as f:
+            configs = load(f)
+        with open("configs.json", "r") as f:
+            new_configs = load(f)
+
+        for key, value in configs.items():
+            new_configs[key] = value
+
+        with open("configs-user.json", "w") as f:
+            dump(new_configs, f)
 
         reload_module = modules["fun"]
         reload(reload_module)

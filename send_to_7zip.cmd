@@ -1,5 +1,7 @@
 @echo off
 
+poetry export -f requirements.txt --output requirements.txt
+
 7z.exe a -t7z program.7z setup.bat
 7z.exe a -t7z program.7z requirements.txt
 7z.exe a -t7z program.7z main.py

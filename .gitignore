@@ -127,5 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/DO NOT OPEN ON CAM/
+
 .idea/
+
+# Configs and user stuff
+/DO NOT OPEN ON CAM/
+program.7z
+.env.account_details
